@@ -7,7 +7,7 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 	popiris = iface.addVectorLayer("Population_IRIS","POP_IRIS","ogr")
 
 	#Sélection de l'IRIS à étudier
-	num = ???
+	num = num_iris
 	it = iris.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"DCOMIRIS" = {0}'.format(num) ))
 	iris.setSelectedFeatures( [ f.id() for f in it ] )
 

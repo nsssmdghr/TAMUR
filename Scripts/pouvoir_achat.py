@@ -3,7 +3,10 @@
 from numpy import *
 from base import *
 from qgis.core import *
-
+from qgis.utils import iface 
+from qgis.analysis import QgsGeometryAnalyzer 
+import processing
+from qgis.PyQt.QtCore import QVariant
 
 
 
@@ -33,10 +36,6 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 	iris.setSelectedFeatures( [ f.id() for f in it ] )
 
 	#Création du périmètre de 10km
-	from qgis.utils import iface 
-	from qgis.analysis import QgsGeometryAnalyzer 
-	import processing
-
 	QgsGeometryAnalyzer().buffer(iris, ".\Couches\Buffer.shp",10000, True, False, -1)
 	buffer = iface.addVectorLayer(".\Couches\Buffer.shp","Buffer","ogr")
 
@@ -75,7 +74,6 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 	perim.addJoin(joinObject)
 
 	#Création de nouvelles colonnes (pouvoir d'achat, distance et potentiel de chaque IRIS)
-	from qgis.PyQt.QtCore import QVariant
 	perim.dataProvider().addAttributes([QgsField("P_Achat", QVariant.Int), QgsField("Distance", QVariant.Int),QgsField("Potentiel", QVariant.Int)])
 	perim.updateFields()
 

@@ -16,6 +16,11 @@ os.chdir('.\Couches')
 liste_csv = traitement_base_all()
 
 
+#Importation du dictionnaire des parametres
+
+param = import_param('parametres.csv')
+
+
 #Traitement parts modales
 
 parts_modales('PARTS_MOD.csv')

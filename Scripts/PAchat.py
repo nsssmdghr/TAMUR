@@ -1,10 +1,10 @@
 def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IRIS):
 	
 	#Importation des couche et création des appels
-	iris = iface.addVectorLayer("Geographie_IRIS","IRIS","ogr")
-	communes = iface.addVectorLayer("Donnees_Communes","COMMUNES","ogr")
-	reviris = iface.addVectorLayer("Revenus_IRIS","REV_IRIS","ogr")
-	popiris = iface.addVectorLayer("Population_IRIS","POP_IRIS","ogr")
+	iris = iface.addVectorLayer(".\Couches\Geographie_IRIS","IRIS","ogr")
+	communes = iface.addVectorLayer(".\Couches\Donnees_Communes","COMMUNES","ogr")
+	reviris = iface.addVectorLayer(".\Couches\Revenus_IRIS","REV_IRIS","ogr")
+	popiris = iface.addVectorLayer(".\Couches\Population_IRIS","POP_IRIS","ogr")
 
 	#Sélection de l'IRIS à étudier
 	num = num_iris
@@ -16,14 +16,14 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 	from qgis.analysis import QgsGeometryAnalyzer 
 	import processing
 
-	QgsGeometryAnalyzer().buffer(iris, ".\PAchat\Buffer.shp",10000, True, False, -1)
-	buffer = iface.addVectorLayer(".\PAchat\Buffer.shp","Buffer","ogr")
+	QgsGeometryAnalyzer().buffer(iris, ".\Couches\Buffer.shp",10000, True, False, -1)
+	buffer = iface.addVectorLayer(".\Couches\Buffer.shp","Buffer","ogr")
 
 	#Création d'une couche restreinte au périmètre de 10km
 	iris.removeSelection()
 
-	processing.runalg('qgis:extractbylocation', iris, buffer, u'within', 0, ".\PAchat\Perim.shp")
-	perim = iface.addVectorLayer(".\PAchat\Perim.shp","Perim","ogr")
+	processing.runalg('qgis:extractbylocation', iris, buffer, u'within', 0, ".\Couches\Perim.shp")
+	perim = iface.addVectorLayer(".\Couches\Perim.shp","Perim","ogr")
 
 	#Jointures des différentes bases de données à la couche géographique
 	perimField='depcom'
@@ -87,5 +87,5 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 			perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+200)^n } })
 
 	#Exportation des données des IRIS du périmètre dans un CSV
-	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\PAchat\Perim.csv', "utf-8", None, "CSV")
+	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\Couches\Perim.csv', "utf-8", None, "CSV")
 

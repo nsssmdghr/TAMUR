@@ -178,3 +178,11 @@ def somme_col(fichier,n):
                                                 somme += float(val)
                                         flag = 1
         return somme
+
+
+def import_param(fichier):
+        ar_param=csv_to_array(fichier)
+        dic_param=dict(ar_param)
+        for id in dic_param:
+                dic_param[id]=float(dic_param[id])
+        return dic_param

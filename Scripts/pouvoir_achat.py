@@ -106,4 +106,4 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 			perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+200)^n } })
 
 	#Exportation des données des IRIS du périmètre dans un CSV
-	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\Couches\Perim.csv', "utf-8", None, "CSV")
+	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\Couches\perim.csv', "utf-8", None, "CSV")

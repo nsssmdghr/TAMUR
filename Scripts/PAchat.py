@@ -64,7 +64,7 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 	for feature in it:
 		centro = feature.geometry().centroid()
 
-	n=2
+	n=friction_deplacement
 
 	#Remplissage des colonnes pouvoir d'achat (numéro 8) et distance (numéro 9)
 	distance = QgsDistanceArea()
@@ -84,7 +84,7 @@ def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IR
 	features = perim.getFeatures()
 	for feature in features:
 		if not feature['COMMUNES_Field_2'] is None:
-			perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+500)^n } })
+			perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+200)^n } })
 
 	#Exportation des données des IRIS du périmètre dans un CSV
 	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\PAchat\Perim.csv', "utf-8", None, "CSV")

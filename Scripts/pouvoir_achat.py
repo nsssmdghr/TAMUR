@@ -2,7 +2,7 @@
 
 from numpy import *
 from base import *
-
+from qgis.core import *
 
 
 

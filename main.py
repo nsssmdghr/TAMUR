@@ -12,7 +12,7 @@ chemin = 'Chemin vers dossier principal'
 os.chdir(chemin)
 
 
-
+os.chdir('./Couches')
 
 #Traitement de base
 

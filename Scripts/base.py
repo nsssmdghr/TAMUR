@@ -80,7 +80,7 @@ def txt_to_csv(fichier):
 
 
 #Convertir en array
-def csv_to_array(fichier):
+def csv_to_list(fichier):
         if not fichier.endswith('.csv'):
                 print('Erreur: le fichier n\'est pas un .csv')
         else:
@@ -97,7 +97,7 @@ def csv_to_array(fichier):
                                                 att += c
                                 tab_p.append(att[:-1])
                                 tab.append(tab_p)
-                        return array(tab,dtype='|S50')
+                        return tab
 
 
 def keep_col(fichier,liste_col):
@@ -120,8 +120,7 @@ def keep_col(fichier,liste_col):
                 os.rename('_.csv',fichier)
 
 def traitement_base_all():
-        
-        liste_txt = import_txt('./Couches')
+        liste_txt = import_txt('.')
         if liste_txt == []:
                 print('Aucun fichier .txt dans le dossier.')
         else:
@@ -129,9 +128,9 @@ def traitement_base_all():
                 print(liste_txt)
 
         for fichier in liste_txt:
-                txt_to_csv('./Couches' + fichier)
+                txt_to_csv(fichier)
         
-        liste_csv = import_csv('./Couches')
+        liste_csv = import_csv('.')
         if liste_csv == []:
                 print('Aucun fichier .csv dans le dossier.')
         else:
@@ -140,9 +139,10 @@ def traitement_base_all():
 
 
         for fichier in liste_csv:
-                traitement_base('./Couches/' + fichier)
+                traitement_base(fichier)
                 print('Traitement de ' + fichier + ' terminé')
 
+	
         return liste_csv
 
 def sup_lignes_null(fichier):
@@ -181,8 +181,8 @@ def somme_col(fichier,n):
 
 
 def import_param(fichier):
-        ar_param=csv_to_array(fichier)
-        dic_param=dict(ar_param)
+        ar_param = csv_to_list(fichier)
+        dic_param = dict(ar_param)
         for id in dic_param:
                 dic_param[id]=float(dic_param[id])
         return dic_param

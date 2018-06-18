@@ -2,10 +2,10 @@
 
 #Importation des fonctions de traitement
 
-from EPARECA.base import *
-from EPARECA.parts_modales import *
-from EPARECA.potentiel_commercial import *
-
+from Scripts.base import *
+from Scripts.parts_modales import *
+from Scripts.potentiel_commercial import *
+from Scripts.accessibilite import *
 
 
 chemin = 'Chemin vers dossier principal'

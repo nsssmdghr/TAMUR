@@ -11,7 +11,7 @@ from qgis.PyQt.QtCore import QVariant
 
 
 
-def pouvoir_achat(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IRIS, num_iris, friction_deplacement):
+def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IRIS, num_iris, friction_deplacement):
 	sup_lignes(Donnees_Communes,5)
 	sup_lignes(Population_IRIS,5)
 	sup_lignes(Revenus_IRIS,5)

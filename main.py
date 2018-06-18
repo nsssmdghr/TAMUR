@@ -2,11 +2,14 @@
 
 #Importation des fonctions de traitement
 
-from Scripts.base import *
-from Scripts.parts_modales import *
-from Scripts.pouvoir_achat import *
+from EPARECA.base import *
+from EPARECA.parts_modales import *
+from EPARECA.potentiel_commercial import *
 
-os.chdir('.\Couches')
+
+
+chemin = 'Chemin vers dossier principal'
+os.chdir(chemin)
 
 
 
@@ -21,10 +24,36 @@ liste_csv = traitement_base_all()
 param = import_param('parametres.csv')
 
 
-#Traitement parts modales
+
+
+
+#Traitement potentiel commercial
+
+potentiel_commercial('POP_IRIS.csv','REV_IRIS.csv','COMMUNES.csv')
+
+
+#Traitement couverture commerciale
+
+
+#Traitement accessibilite
 
 parts_modales('PARTS_MOD.csv')
 
-#Traitement pouvoir d'achat
 
-pouvoir_achat('POP_IRIS.csv','REV_IRIS.csv','COMMUNES.csv')
+
+#Traitement points d'interet
+
+
+#Traitement ambiance urbaine
+
+
+#Traitement autres indicateurs saisis
+
+
+#Ponderation et agregation
+
+
+#Exportation
+
+
+

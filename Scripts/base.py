@@ -121,7 +121,7 @@ def keep_col(fichier,liste_col):
 
 def traitement_base_all():
         
-        liste_txt = import_txt('.\Couches')
+        liste_txt = import_txt('./Couches')
         if liste_txt == []:
                 print('Aucun fichier .txt dans le dossier.')
         else:
@@ -129,9 +129,9 @@ def traitement_base_all():
                 print(liste_txt)
 
         for fichier in liste_txt:
-                txt_to_csv(fichier)
+                txt_to_csv('./Couches' + fichier)
         
-        liste_csv = import_csv('.\Couches')
+        liste_csv = import_csv('./Couches')
         if liste_csv == []:
                 print('Aucun fichier .csv dans le dossier.')
         else:
@@ -139,9 +139,9 @@ def traitement_base_all():
                 print(liste_csv)
 
 
-        for fichier in liste_csv:       
-                traitement_base(fichier)
-                print('Traitement de '+fichier+' terminé')
+        for fichier in liste_csv:
+                traitement_base('./Couches/' + fichier)
+                print('Traitement de ' + fichier + ' terminé')
 
         return liste_csv
 

@@ -37,7 +37,7 @@ potentiel_commercial('POP_IRIS.csv','REV_IRIS.csv','COMMUNES.csv')
 
 #Traitement accessibilite
 
-parts_modales('PARTS_MOD.csv')
+pm_vp, pm_tc = parts_modales('PARTS_MOD.csv')
 
 
 

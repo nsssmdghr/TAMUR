@@ -1,7 +1,6 @@
 # -*- coding: cp1252 -*-
 import os
 from string import maketrans
-from numpy import *
 from importation import *
 
 #Remplacement des ';' et des caracteres non pris en compte

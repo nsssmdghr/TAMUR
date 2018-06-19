@@ -1,0 +1,32 @@
+potentiel commercial:
+- fonction : potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IRIS, num_iris, friction_deplacement)
+- inputs : 'IRIS.shp', 'COMMUNES.csv', 'REV_IRIS.csv', 'POP_IRIS.csv', num_iris, friction_deplacement (les deux derniers sont a appeler depuis l'excel des entrées)
+- outputs : perim.csv (potentiel d'achat = somme de la colonne K)  
+
+couverture commerciale :
+- fonction : 
+- inputs : 
+- outputs : 
+
+
+parts modales : 
+- fonction : parts_modales(fichier)
+- inputs : 'PARTS_MOD.csv'
+- outputs : pm_vp, pm_tc
+
+accessibilité :
+- fonction : accessibilite(Couche_TC)
+- inputs : 'Couche_TC.shp' (à télécharger par région et renommer Couche_TC.shp)
+- outputs : access_vp, access_tc
+
+points d'interet:
+- fonction : 
+- inputs : 
+- outputs : 
+
+
+ambiance urbaine :
+- fonction : 
+- inputs : 
+- outputs : 
+

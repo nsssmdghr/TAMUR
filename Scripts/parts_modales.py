@@ -1,6 +1,4 @@
 # -*- coding: cp1252 -*-
-from numpy import *
-
 
 def parts_modales(fichier):
     liste_trans = []

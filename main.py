@@ -37,7 +37,7 @@ note_pot_com = get_note(pot_com, 'potentiel commercial', tab_deciles)
 
 #Traitement couverture commerciale
 
-note_couv_com = get_note(couv_com, 'couverture commercialle', tab_deciles)
+note_couv_com = get_note(couv_com, 'couverture commerciale', tab_deciles)
 
 #Traitement accessibilite
 

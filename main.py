@@ -6,6 +6,7 @@ from Scripts.base import *
 from Scripts.parts_modales import *
 from Scripts.potentiel_commercial import *
 from Scripts.accessibilite import *
+from Scripts.ambiance_urbaine import *
 from Scripts.deciles import *
 
 chemin = 'Chemin vers dossier principal'
@@ -53,6 +54,9 @@ note_point_i = get_note(point_i, 'points interet', tab_deciles)
 
 #Traitement ambiance urbaine
 
+amb_urb = ambiance_urbaine('ambiance_urbaine.csv', param)
+
+note_amb_urb = get_note(amb_urb, 'ambiance urbaine', tab_deciles)
 
 
 #Traitement autres indicateurs saisis

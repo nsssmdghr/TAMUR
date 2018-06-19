@@ -1,6 +1,5 @@
 # -*- coding: cp1252 -*-
 
-from numpy import *
 from base import *
 from qgis.core import *
 from qgis.utils import iface 

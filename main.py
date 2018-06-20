@@ -32,7 +32,7 @@ tab_deciles = csv_to_list('deciles,csv')
 
 #Traitement potentiel commercial
 
-potentiel_commercial('POP_IRIS.csv','REV_IRIS.csv','COMMUNES.csv')
+potentiel_commercial('IRIS.shp', 'COMMUNES.csv', 'REV_IRIS.csv', 'POP_IRIS.csv', num_iris, friction_deplacement)
 
 note_pot_com = get_note(pot_com, 'potentiel commercial', tab_deciles)
 

@@ -59,7 +59,7 @@ def accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone
   
   ##exportation du csv de sortie (indicateur = somme de la colonne S)
   QgsVectorFileWriter.writeAsVectorFormat(comiso30v, r'.\comiso30v.csv', "utf-8", None, "CSV")
-  access_vp = 
+  access_vp = somme_col('comiso30v.csv', 19)
   
   
   ##retourner les sorties

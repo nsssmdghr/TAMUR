@@ -8,7 +8,7 @@ def accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone
   
   ##Traitement de Emplois_communes, pour ne garder que l'information pertinente
   sup_lignes(Emlois_Communes,5)
-  keep_col(Emplois_Communes,[1,39])
+  keep_col(Emplois_Communes,[1,38])
   print("Fichiers prets pour le traitement de l'accessibilité")
 
   ##Demander à l'utilisateur de suivre le mode d'emploi pour créer les isochrones

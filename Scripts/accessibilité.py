@@ -8,13 +8,8 @@ def accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone
   
   ##Traitement de Emplois_communes, pour ne garder que l'information pertinente
   sup_lignes(Emlois_Communes,5)
-  keep_col(Emplois_Communes,[1,38])
+  keep_col(Emplois_Communes,[1,39])
   print("Fichiers prets pour le traitement de l'accessibilité")
-
-  ##Demander à l'utilisateur de suivre le mode d'emploi pour créer les isochrones
-  flag = 0
-  while flag != 1:
-    flag = raw_input("Veuillez suivre la section 'Isochrones' du mode d'emploi, puis taper 1 et valider avec Entree.")
 
   ##importation des couches et création des appels
   TC = iface.addVectorLayer("Couche_TC", "TC", "ogr")

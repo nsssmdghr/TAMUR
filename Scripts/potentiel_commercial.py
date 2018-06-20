@@ -105,7 +105,7 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 			perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+200)^n } })
 
 	#Exportation des données des IRIS du périmètre dans un CSV, calcule et renvoie du résultat final (somme de la colonne K)
-	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\Couches\perim.csv', "utf-8", None, "CSV")
-	pot_com = somme_col('perim.csv', 11)
+	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\perim.csv', "utf-8", None, "CSV")
+	pot_com = somme_col('.\perim.csv', 11)
 	return pot_com
 

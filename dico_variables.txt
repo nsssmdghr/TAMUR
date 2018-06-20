@@ -1,12 +1,12 @@
 potentiel commercial:
 - fonction : potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Population_IRIS, num_iris, friction_deplacement)
-- inputs : 'IRIS.shp', 'COMMUNES.csv', 'REV_IRIS.csv', 'POP_IRIS.csv', num_iris, friction_deplacement (les deux derniers sont a appeler depuis l'excel des entrées)
-- outputs : perim.csv (potentiel d'achat = somme de la colonne K)  
+- inputs : 'IRIS.shp', 'COMMUNES.csv', 'REV_IRIS.csv', 'POP_IRIS.csv', num_iris, friction_deplacement (les deux derniers sont a appeler depuis l'excel des entrÃ©es)
+- outputs : pot_com  
 
 couverture commerciale :
 - fonction : 
 - inputs : 
-- outputs : 
+- outputs : commerces.csv (couverture = somme de la colonne ?)
 
 
 parts modales : 
@@ -14,15 +14,16 @@ parts modales :
 - inputs : 'PARTS_MOD.csv'
 - outputs : pm_vp, pm_tc
 
-accessibilité :
-- fonction : accessibilite(Couche_TC)
-- inputs : 'Couche_TC.shp' (à télécharger par région et renommer Couche_TC.shp)
+accessibilitÃ© :
+- fonction : accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone30V)
+- inputs : 'Couche_TC.shp', 'COMMUNES_OSM.shp', 'Emp_Com.csv', 'Isochrone10P.shp', 'Isochrone30V.shp' 
+            (Couche TC Ã  tÃ©lÃ©charger par rÃ©gion et renommer Couche_TC.shp)
 - outputs : access_vp, access_tc
 
 points d'interet:
-- fonction : 
-- inputs : 
-- outputs : 
+- fonction : points_interet(POI_EPSG, Isochrone10V)
+- inputs : 'POI_EPSC.shp', 'Isochrone10V.shp'
+- outputs : point_i
 
 
 ambiance urbaine :

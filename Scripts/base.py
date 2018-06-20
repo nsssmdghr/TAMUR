@@ -185,3 +185,47 @@ def import_param(fichier):
         for id in dic_param:
                 dic_param[id]=float(dic_param[id])
         return dic_param
+
+#Conserve, ligne par ligne, la premiere colonne ainsi que la somme des colonnes souhaitees
+def merge_col(fichier, liste_col):
+        for i in range(len(liste_col)):
+                liste_col[i] -= 1
+	with open(fichier,'r') as f:
+                with open('_.csv','w') as out:
+                        flag = 0
+                        for l in f:
+                                somme = 0
+                                compteur = 0
+                                val = ''
+                                if flag == 1:
+                                        for c in l:
+                                                if compteur in liste_col and c not in [',','\n']:
+                                                        val += c
+                                                        flag = 2
+                                                if c == ',' and flag == 1:
+                                                        compteur += 1
+                                                if c == ',' and flag == 2:
+                                                        compteur += 1
+                                                        somme += float(val)
+                                                        flag = 1
+                                                        val = ''
+                                        if val != '':
+                                                somme += float(val)
+                                                val = ''
+                                        i=0
+                                        while i < len(l) and l[i] != ',':
+                                                out.write(l[i])
+                                                i += 1
+                                        out.write(',{0}\n'.format(somme))
+                                        
+                                if flag == 0:
+                                        i=0
+                                        while i < len(l) and l[i] != ',':
+                                                out.write(l[i])
+                                                i += 1        
+                                        out.write(',SOMME\n')
+                                        
+                                flag = 1
+        os.remove(fichier)
+        os.rename('_.csv',fichier)
+

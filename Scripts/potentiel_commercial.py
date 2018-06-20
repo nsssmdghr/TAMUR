@@ -35,14 +35,14 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 	iris.setSelectedFeatures( [ f.id() for f in it ] )
 
 	#Création du périmètre de 10km
-	QgsGeometryAnalyzer().buffer(iris, ".\Couches\Buffer.shp",10000, True, False, -1)
-	buffer = iface.addVectorLayer(".\Couches\Buffer.shp","Buffer","ogr")
+	QgsGeometryAnalyzer().buffer(iris, ".\Buffer.shp",10000, True, False, -1)
+	buffer = iface.addVectorLayer(".\Buffer.shp","Buffer","ogr")
 
 	#Création d'une couche restreinte au périmètre de 10km
 	iris.removeSelection()
 
-	processing.runalg('qgis:extractbylocation', iris, buffer, u'within', 0, ".\Couches\Perim.shp")
-	perim = iface.addVectorLayer(".\Couches\Perim.shp","Perim","ogr")
+	processing.runalg('qgis:extractbylocation', iris, buffer, u'within', 0, ".\Perim.shp")
+	perim = iface.addVectorLayer(".\Perim.shp","Perim","ogr")
 
 	#Jointures des différentes bases de données à la couche géographique
 	perimField='depcom'
@@ -105,4 +105,4 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 			perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+200)^n } })
 
 	#Exportation des données des IRIS du périmètre dans un CSV
-	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\Couches\perim.csv', "utf-8", None, "CSV")
+	QgsVectorFileWriter.writeAsVectorFormat(perim, r'.\perim.csv', "utf-8", None, "CSV")

@@ -51,6 +51,8 @@ note_access_tc = get_note(access_tc, 'accessibilite tc', tab_deciles)
 
 #Traitement points d'interet
 
+point_i = points_interet('POI_EPSC.shp', 'Isochrone10V.shp')
+
 note_point_i = get_note(point_i, 'points interet', tab_deciles)
 
 #Traitement ambiance urbaine

@@ -28,13 +28,14 @@ def accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone
   ##comptage des arrêts de bus dans l'isochrone
   it = TCiso10p.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"fclass" = bus_stop' )) 
   TCiso10p.setSelectedFeatures( [ f.id() for f in it ] )
-  Arrets_bus = TCiso10p.selectedFeatureCount()
-  
+  arrets_bus = TCiso10p.selectedFeatureCount()  
   
   ##comptage des points autres qu'arrêts de bus
   it = TCiso10p.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"fclass" != bus_stop' )) 
   TCiso10p.setSelectedFeatures( [ f.id() for f in it ] )
-  Arrets_non_bus = TCiso10p.selectedFeatureCount()
+  arrets_non_bus = TCiso10p.selectedFeatureCount()
+  
+  access_tc = arrets_bus + arrets_non_bus
   
   ##ajout des couches commune, emplois et isochrone en voiture 30 min
   communes = iface.addVectorLayer("Communes","COMMUNES","ogr")
@@ -58,7 +59,9 @@ def accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone
   
   ##exportation du csv de sortie (indicateur = somme de la colonne S)
   QgsVectorFileWriter.writeAsVectorFormat(comiso30v, r'.\comiso30v.csv', "utf-8", None, "CSV")
+  access_vp = 
+  
   
   ##retourner les sorties
-  return arrets_bus, arrets_non_bus
+  return access_vp, access_tc
   

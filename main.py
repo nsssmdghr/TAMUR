@@ -8,6 +8,7 @@ from Scripts.potentiel_commercial import *
 from Scripts.accessibilite import *
 from Scripts.ambiance_urbaine import *
 from Scripts.deciles import *
+from Scripts.points_interet import *
 
 chemin = 'Chemin vers dossier principal'
 os.chdir(chemin)

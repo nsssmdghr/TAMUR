@@ -21,8 +21,8 @@ accessibilité :
 - outputs : access_vp, access_tc
 
 points d'interet:
-- fonction : points_interet(POI_EPSG)
-- inputs : 'POI_EPSC.shp'
+- fonction : points_interet(POI_EPSG, Isochrone10V)
+- inputs : 'POI_EPSC.shp', 'Isochrone10V.shp'
 - outputs : nombre_POI
 
 

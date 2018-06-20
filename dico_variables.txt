@@ -15,8 +15,9 @@ parts modales :
 - outputs : pm_vp, pm_tc
 
 accessibilité :
-- fonction : accessibilite(Couche_TC)
-- inputs : 'Couche_TC.shp' (à télécharger par région et renommer Couche_TC.shp)
+- fonction : accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone30V)
+- inputs : 'Couche_TC.shp', 'COMMUNES_OSM.shp', 'Emp_Com.csv', 'Isochrone10P.shp', 'Isochrone30V.shp' 
+            (Couche TC à télécharger par région et renommer Couche_TC.shp)
 - outputs : access_vp, access_tc
 
 points d'interet:

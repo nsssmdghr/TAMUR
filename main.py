@@ -68,7 +68,7 @@ notes['CU02'] = note_access
 
 
 #Traitement points d'interet
-point_i = points_interet('POI_EPSC.shp', 'Isochrone10V.shp')
+point_i = points_interet('POI_EPSC.shp', 'Isochrone10V.shp', param)
 ind_brut['PI'] = point_i
 
 note_point_i = get_note(point_i, 'points interet', tab_deciles)

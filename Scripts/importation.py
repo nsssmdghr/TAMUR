@@ -17,3 +17,11 @@ def import_txt(chemin):
                 if fichier.endswith('.txt'):
                         fp.append(fichier) 
         return fp
+
+#Importation du contenu d'un csv servant a stocker 1 chaine de caracteres
+def get_nom(fichier):
+        nom = ''
+        with open(fichier, 'r') as f:
+                nom = f.readline()
+        return nom
+

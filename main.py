@@ -92,4 +92,4 @@ corresp = dict(csv_to_list('correspondances.csv'))
 notes_branches = agreg(notes, param, corresp)
 
 #Exportation
-export(notes, notes_branches, ind_brut, nom_dossier)
+export(notes, notes_branches, ind_brut, amb_urb_brutes, nom_dossier)

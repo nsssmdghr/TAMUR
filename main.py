@@ -78,7 +78,7 @@ note_point_i = get_note(point_i, 'points interet', tab_deciles)
 notes['CU03'] = note_point_i
 
 #Traitement ambiance urbaine
-notes_ambiance_urbaine = dict(csv_to_list('ambiance_urbaine.csv'))
+amb_urb_brutes = dict(csv_to_list('ambiance_urbaine.csv'))
 amb_urb = ambiance_urbaine('ambiance_urbaine.csv', param)
 
 notes_amb_urb = get_note(amb_urb, 'ambiance urbaine', tab_deciles)

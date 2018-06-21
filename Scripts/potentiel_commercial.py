@@ -23,28 +23,28 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 	print("Fichiers prets pour le traitement du pouvoir d'achat")
 
 	
-	#Importation des couche et création des appels
+	#Importation des couche et creation des appels
 	iris = iface.addVectorLayer("Geographie_IRIS","IRIS","ogr")
 	communes = iface.addVectorLayer("Donnees_Communes","COMMUNES","ogr")
 	reviris = iface.addVectorLayer("Revenus_IRIS","REV_IRIS","ogr")
 	popiris = iface.addVectorLayer("Population_IRIS","POP_IRIS","ogr")
 
-	#Sélection de l'IRIS à étudier
+	#Selection de l'IRIS a etudier
 	num = num_iris
-	it = iris.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"DCOMIRIS" = {0}'.format(num) ))
+	it = iris.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"DCOMIRIS" = ' + num) ))
 	iris.setSelectedFeatures( [ f.id() for f in it ] )
 
-	#Création du périmètre de 10km
+	#Creation du perimètre de 10km
 	QgsGeometryAnalyzer().buffer(iris, "Buffer.shp",10000, True, False, -1)
 	buffer = iface.addVectorLayer("Buffer.shp","Buffer","ogr")
 
-	#Création d'une couche restreinte au périmètre de 10km
+	#Creation d'une couche restreinte au perimètre de 10km
 	iris.removeSelection()
 
 	processing.runalg('qgis:extractbylocation', iris, buffer, u'within', 0, "Perim.shp")
 	perim = iface.addVectorLayer("Perim.shp","Perim","ogr")
 
-	#Jointures des différentes bases de données à la couche géographique
+	#Jointures des differentes bases de donnees à la couche geographique
 	perimField='depcom'
 	communesField='field_1'
 	joinObject = QgsVectorJoinInfo()
@@ -72,19 +72,19 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 	joinObject.memoryCache = True
 	perim.addJoin(joinObject)
 
-	#Création de nouvelles colonnes (pouvoir d'achat, distance et potentiel de chaque IRIS)
+	#Creation de nouvelles colonnes (pouvoir d'achat, distance et potentiel de chaque IRIS)
 	perim.dataProvider().addAttributes([QgsField("P_Achat", QVariant.Int), QgsField("Distance", QVariant.Int),QgsField("Potentiel", QVariant.Int)])
 	perim.updateFields()
 
 	#Remplissage des nouvelles colonnes
-	#Création d'un appel pour le centroïde de l'IRIS étudié
+	#Creation d'un appel pour le centroïde de l'IRIS etudie
 	it = iris.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"DCOMIRIS" = {0}'.format(num) ))
 	for feature in it:
 		centro = feature.geometry().centroid()
 
 	n=friction_deplacement
 
-	#Remplissage des colonnes pouvoir d'achat (numéro 8) et distance (numéro 9)
+	#Remplissage des colonnes pouvoir d'achat (numero 8) et distance (numero 9)
 	distance = QgsDistanceArea()
 
 	features = perim.getFeatures()
@@ -98,13 +98,13 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 		centest = feature.geometry().centroid()
 		perim.dataProvider().changeAttributeValues({ feature.id() : { 9 : distance.measureLine(centro.asPoint(), centest.asPoint()) } })
 
-	#Remplissage de la colonne potentiel (numéro 10)
+	#Remplissage de la colonne potentiel (numero 10)
 	features = perim.getFeatures()
 	for feature in features:
 		if not feature['COMMUNES_Field_2'] is None:
 			perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+200)^n } })
 
-	#Exportation des données des IRIS du périmètre dans un CSV, calcule et renvoie du résultat final (somme de la colonne K)
+	#Exportation des donnees des IRIS du perimètre dans un CSV, calcule et renvoi du resultat final (somme de la colonne K)
 	QgsVectorFileWriter.writeAsVectorFormat(perim, r'perim.csv', "utf-8", None, "CSV")
 	pot_com = somme_col('perim.csv', 11)
 	

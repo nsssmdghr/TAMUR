@@ -107,7 +107,6 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 	#Exportation des données des IRIS du périmètre dans un CSV, calcule et renvoie du résultat final (somme de la colonne K)
 	QgsVectorFileWriter.writeAsVectorFormat(perim, r'perim.csv', "utf-8", None, "CSV")
 	pot_com = somme_col('perim.csv', 11)
-	return pot_com
 	
 	QgsMapLayerRegistry.instance().removeMapLayers( [iris.id()] )
 	QgsMapLayerRegistry.instance().removeMapLayers( [communes.id()] )
@@ -115,4 +114,8 @@ def potentiel_commercial(Geographie_IRIS, Donnees_Communes, Revenus_IRIS, Popula
 	QgsMapLayerRegistry.instance().removeMapLayers( [popiris.id()] )
 	QgsMapLayerRegistry.instance().removeMapLayers( [buffer.id()] )
 	QgsMapLayerRegistry.instance().removeMapLayers( [perim.id()] )
+	
+	return pot_com
+	
+
 	

@@ -1,6 +1,7 @@
 from base import *
 from qgis.core import *
-from qgis.utils import iface 
+from qgis.utils import iface
+from qgis.analysis import QgsGeometryAnalyzer
 import processing
 
 

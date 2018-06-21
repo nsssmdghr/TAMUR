@@ -41,7 +41,7 @@ notes['CM05'] = note_pot_com
 
 #Traitement couverture commerciale
 
-couv_com = couverture_commerciale('IRIS.shp', 'POP_IRIS.csv', 'PAR_IRIS.csv', 'PAR_COM.csv', 'COM_IRIS.csv', 'COM_COM.csv', 'SAN_IRIS.csv', 'SAN_COM.csv', 'TRA_IRIS.csv', 'TRA_COM.csv', 'Isochrone10P.shp')
+couv_com = couverture_commerciale('IRIS.shp', 'POP_IRIS_bis.csv', 'PAR_IRIS.csv', 'PAR_COM.csv', 'COM_IRIS.csv', 'COM_COM.csv', 'SAN_IRIS.csv', 'SAN_COM.csv', 'TRA_IRIS.csv', 'TRA_COM.csv', 'Isochrone10P.shp')
 
 note_couv_com = get_note(couv_com, 'couverture commerciale', tab_deciles)
 notes['CM03'] = note_couv_com

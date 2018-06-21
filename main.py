@@ -29,6 +29,9 @@ param = import_param('parametres.csv')
 #Importation du nom du dossier en cours de traitement
 nom_dossier = get_nom('nom_dossier.csv')
 
+#Importation du numero de l'IRIS
+num_iris = get_nom('num_iris.csv')
+
 #Importation des deciles
 tab_deciles = csv_to_list('deciles,csv')
 

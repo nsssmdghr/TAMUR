@@ -30,18 +30,22 @@ param = import_param('parametres.csv')
 tab_deciles = csv_to_list('deciles,csv')
 
 
+notes = {}
 
 #Traitement potentiel commercial
 
 pot_com = potentiel_commercial('IRIS.shp', 'COMMUNES.csv', 'REV_IRIS.csv', 'POP_IRIS.csv', num_iris, friction_deplacement)
 
 note_pot_com = get_note(pot_com, 'potentiel commercial', tab_deciles)
+notes['CM05'] = note_pot_com 
 
 #Traitement couverture commerciale
 
 couv_com = couverture_commerciale('IRIS.shp', 'POP_IRIS.csv', 'PAR_IRIS.csv', 'PAR_COM.csv', 'COM_IRIS.csv', 'COM_COM.csv', 'SAN_IRIS.csv', 'SAN_COM.csv', 'TRA_IRIS.csv', 'TRA_COM.csv', 'Isochrone10P.shp')
 
 note_couv_com = get_note(couv_com, 'couverture commerciale', tab_deciles)
+notes['CM03'] = note_couv_com
+
 
 #Traitement accessibilite
 
@@ -51,27 +55,50 @@ access_vp, access_tc = accessibilite('Couche_TC.shp', 'COMMUNES_OSM.shp', 'Emp_C
 note_access_vp = get_note(access_vp, 'accessibilite vp', tab_deciles)
 note_access_tc = get_note(access_tc, 'accessibilite tc', tab_deciles)
 
+note_access = note_access_vp * param['P322'] + note_access_tc * param['P321'] 
+notes['CU02'] = note_access
+
 
 #Traitement points d'interet
 
 point_i = points_interet('POI_EPSC.shp', 'Isochrone10V.shp')
 
 note_point_i = get_note(point_i, 'points interet', tab_deciles)
+notes['CU03'] = note_point_i
 
 #Traitement ambiance urbaine
 
 amb_urb = ambiance_urbaine('ambiance_urbaine.csv', param)
 
 note_amb_urb = get_note(amb_urb, 'ambiance urbaine', tab_deciles)
-
-
-#Traitement autres indicateurs saisis
-
+notes['CU01'] = note_amb_urb
 
 #Ponderation et agregation
+
+saisie = dict(csv_to_list('saisie.csv'))
+saisie.update(notes)
+corresp = dict(csv_to_list('correspondances.csv'))
+
+notes_branches = {CP:0, PA:0, CU:0, CF:0, NA:0, CE:0, CM:0}
+somme_pond = {CP:0, PA:0, CU:0, CF:0, NA:0, CE:0, CM:0}
+for id_entree in notes:
+  notes_branches[id_entree[:2]] += notes[id_entree] * param[corresp[id_entree]]
+  somme_pond[id_entree[:2]] += param[corresp[id_entree]]
+for id in notes_branches:
+  notes_branches[id] /= somme_pond[id]
 
 
 #Exportation
 
+os.chdir('../Resultats')
+indics = notes.items()
+branches = notes_branches.items()
+with open('indicateurs.txt','w') as ind:
+  for i in indics:
+    ind.write(i[0] + ';' + str(i[1]) + '\n')
+with open('branches.txt','w') as br:
+  for b in branches:
+    br.write(b[0] + ';' + str(b[1]) + '\n')
 
+  
 

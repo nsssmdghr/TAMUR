@@ -14,3 +14,7 @@ def points_interet(POI_EPSG, Isochrone10V):
   
   nombre_POI = POIiso.featureCount()
   return nombre_POI
+
+  QgsMapLayerRegistry.instance().removeMapLayers( [poi.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [iso10v.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [POIiso.id()] )

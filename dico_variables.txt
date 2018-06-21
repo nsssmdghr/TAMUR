@@ -5,7 +5,7 @@ potentiel commercial:
 
 couverture commerciale :
 - fonction : couverture_commerciale(GEO_IRIS, POP_IRIS, PAR_IRIS, PAR_COM, COM_IRIS, COM_COM, SAN_IRIS, SAN_COM, TRA_IRIS, TRA_COM, Isochrone10P)
-- inputs : 'IRIS.shp', 'POP_IRIS.csv', 'PAR_IRIS.csv', 'PAR_COM.csv', 'COM_IRIS.csv', 'COM_COM.csv', 'SAN_IRIS.csv', 'SAN_COM.csv', 'TRA_IRIS.csv', 'TRA_COM.csv', 'Isochrone10P.shp')
+- inputs : 'IRIS.shp', 'POP_IRIS_bis.csv', 'PAR_IRIS.csv', 'PAR_COM.csv', 'COM_IRIS.csv', 'COM_COM.csv', 'SAN_IRIS.csv', 'SAN_COM.csv', 'TRA_IRIS.csv', 'TRA_COM.csv', 'Isochrone10P.shp')
 - outputs : couv_com
 
 

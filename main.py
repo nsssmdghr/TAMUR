@@ -36,12 +36,12 @@ notes = {}
 potentiel_commercial('POP_IRIS.csv','REV_IRIS.csv','COMMUNES.csv')
 
 note_pot_com = get_note(pot_com, 'potentiel commercial', tab_deciles)
-notes['PC'] = note_pot_com 
+notes['CM05'] = note_pot_com 
 
 #Traitement couverture commerciale
 
 note_couv_com = get_note(couv_com, 'couverture commerciale', tab_deciles)
-notes['CC'] = note_couv_com
+notes['CM03'] = note_couv_com
 
 
 #Traitement accessibilite
@@ -52,29 +52,47 @@ note_access_vp = get_note(access_vp, 'accessibilite vp', tab_deciles)
 note_access_tc = get_note(access_tc, 'accessibilite tc', tab_deciles)
 
 note_access = note_access_vp * param['P322'] + note_access_tc * param['P321'] 
-notes['AC'] = note_access
+notes['CU02'] = note_access
 
 
 #Traitement points d'interet
 
 note_point_i = get_note(point_i, 'points interet', tab_deciles)
-notes['PI'] = note_point_i
+notes['CU03'] = note_point_i
 
 #Traitement ambiance urbaine
 
 amb_urb = ambiance_urbaine('ambiance_urbaine.csv', param)
 
 note_amb_urb = get_note(amb_urb, 'ambiance urbaine', tab_deciles)
-notes['AU'] = note_amb_urb
+notes['CU01'] = note_amb_urb
 
 #Ponderation et agregation
 
 saisie = dict(csv_to_list('saisie.csv'))
 saisie.update(notes)
+corresp = dict(csv_to_list('correspondances.csv'))
 
+notes_branches = {CP:0, PA:0, CU:0, CF:0, NA:0, CE:0, CM:0}
+somme_pond = {CP:0, PA:0, CU:0, CF:0, NA:0, CE:0, CM:0}
+for id_entree in notes:
+  notes_branches[id_entree[:2]] += notes[id_entree] * param[corresp[id_entree]]
+  somme_pond[id_entree[:2]] += param[corresp[id_entree]]
+for id in notes_branches:
+  notes_branches[id] /= somme_pond[id]
 
 
 #Exportation
 
+os.chdir('../Resultats')
+indics = notes.items()
+branches = notes_branches.items()
+with open('indicateurs.txt','w') as ind:
+  for i in indics:
+    ind.write(i[0] + ';' + str(i[1]) + '\n')
+with open('branches.txt','w') as br:
+  for b in branches:
+    br.write(b[0] + ';' + str(b[1]) + '\n')
 
+  
 

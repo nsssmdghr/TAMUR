@@ -1,5 +1,6 @@
 from qgis.core import *
-from qgis.utils import iface 
+from qgis.utils import iface
+from qgis.analysis import QgsGeometryAnalyzer
 import processing
 
 def points_interet(POI_EPSG, Isochrone10V):

@@ -43,8 +43,8 @@ def couverture_commerciale(GEO_IRIS, POP_IRIS, PAR_IRIS, PAR_COM, COM_IRIS, COM_
 	##Restriction au périmètre 10 min à pieds
 	iso10p = iface.addVectorLayer("Isochrone10P", "ISO10P", "ogr")
 	iris.removeSelection()
-  	processing.runalg('qgis:extractbylocation', iris, iso10p, u'within', 0, ".\iris10p.shp")
-  	iris10p = iface.addVectorLayer(".\iris10p.shp", "IRIS10P", "ogr")
+  	processing.runalg('qgis:extractbylocation', iris, iso10p, u'intersects', 0, "iris10p.shp")
+  	iris10p = iface.addVectorLayer("iris10p.shp", "IRIS10P", "ogr")
 	
 	##Jointures
 	jointure(iris10p, popiris, dcomiris, field_1)
@@ -72,7 +72,7 @@ def couverture_commerciale(GEO_IRIS, POP_IRIS, PAR_IRIS, PAR_COM, COM_IRIS, COM_
 			iris10p.dataProvider().changeAttributeValues({ feature.id() : { 9 : 1 } })
 	
 	##Exportation du tableau final et calcul de la couverture commerciale moyenne sur la zone
-	QgsVectorFileWriter.writeAsVectorFormat(iris10p, r'.\perim.csv', "utf-8", None, "CSV")
-	couv_com = somme_col('.\iris10p.csv', 8)/somme_col('.\iris10p.csv', 9)
+	QgsVectorFileWriter.writeAsVectorFormat(iris10p, r'perim.csv', "utf-8", None, "CSV")
+	couv_com = somme_col('iris10p.csv', 8)/somme_col('iris10p.csv', 9)
 	return couv_com
 	

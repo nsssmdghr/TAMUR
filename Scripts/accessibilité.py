@@ -57,7 +57,17 @@ def accessibilite(Couche_TC, Communes, Emplois_Communes, Isochrone10P, Isochrone
   QgsVectorFileWriter.writeAsVectorFormat(comiso30v, r'comiso30v.csv', "utf-8", None, "CSV")
   access_vp = somme_col('comiso30v.csv', 19)
   
+  ##nettoyer l'iface
+  QgsMapLayerRegistry.instance().removeMapLayers( [TC.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [iso10p.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [TCiso10p.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [communes.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [empcom.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [iso30v.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [comiso30v.id()] )
   
-  ##retourner les sorties
+  
   return access_vp, access_tc
+
+
   

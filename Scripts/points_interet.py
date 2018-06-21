@@ -24,5 +24,9 @@ def points_interet(POI_EPSG, Isochrone10V, param):
     flag = raw_input('Veuillez entrer le numero correspondant a la proximite des points d\'interet, puis valider avec Entree : \n1:la plupart des points sont proches du quartier \n2: points à distances moyennes ou hétérogènes du quartier \n3:points éloignés du quartier \n')
   pro = flag
   
+  QgsMapLayerRegistry.instance().removeMapLayers( [poi.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [iso10v.id()] )
+  QgsMapLayerRegistry.instance().removeMapLayers( [POIiso.id()] )
   
   return param['R{0}'.format(rep)] * param['PR{0}'.format(pro)] * nombre_POI
+

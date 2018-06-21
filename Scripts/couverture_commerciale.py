@@ -74,7 +74,6 @@ def couverture_commerciale(GEO_IRIS, POP_IRIS, PAR_IRIS, PAR_COM, COM_IRIS, COM_
 	##Exportation du tableau final et calcul de la couverture commerciale moyenne sur la zone
 	QgsVectorFileWriter.writeAsVectorFormat(iris10p, r'perim.csv', "utf-8", None, "CSV")
 	couv_com = somme_col('iris10p.csv', 8)/somme_col('iris10p.csv', 9)
-	return couv_com
 	
 	##Nettoyage
 	QgsMapLayerRegistry.instance().removeMapLayers( [iris.id()] )
@@ -87,6 +86,11 @@ def couverture_commerciale(GEO_IRIS, POP_IRIS, PAR_IRIS, PAR_COM, COM_IRIS, COM_
         QgsMapLayerRegistry.instance().removeMapLayers( [sancom.id()] )
         QgsMapLayerRegistry.instance().removeMapLayers( [trairis.id()] )
         QgsMapLayerRegistry.instance().removeMapLayers( [tracom.id()] )
-        QgsMapLayerRegistry.instance().removeMapLayers( [iris10p.id()] )
+        QgsMapLayerRegistry.instance().removeMapLayers( [iris10p.id()] )		       
+			       
+			       
+	return couv_com
+	
+
         
 			       

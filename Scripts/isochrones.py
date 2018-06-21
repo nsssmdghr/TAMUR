@@ -1,6 +1,5 @@
 from qgis.core import *
-from qgis.utils import iface 
-from qgis.core import QgsVectorFileWriter
+from qgis.utils import iface
 
 
 def isochrones(GEO_COM):

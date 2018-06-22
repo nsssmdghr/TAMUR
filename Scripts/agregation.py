@@ -1,9 +1,6 @@
 def agregation(notes, moyennes):
-	out = {}
 	for id in notes:
-		out[id] = notes[id] / moyennes[id]
-	return out
-
+		notes[id] /= moyennes[id]
 
 def agreg(notes, param, corresp):
 	notes_branches = {CP:0, PA:0, CU:0, CF:0, NA:0, CE:0, CM:0}

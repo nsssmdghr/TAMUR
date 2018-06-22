@@ -10,4 +10,5 @@ def agreg(notes, param, corresp):
   			somme_pond[id_entree[:2]] += param[corresp[id_entree]]
 		for id in notes_branches:
  			notes_branches[id] /= somme_pond[id]
+			notes_branches[id] *= 12,5
  	return notes_branches

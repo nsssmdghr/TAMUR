@@ -93,7 +93,8 @@ notes['CU01'] = note_amb_urb
 saisie = dict(csv_to_list('saisie.csv'))
 moyennes = dict(csv_to_list('moyennes.csv'))
 moyennes['CU02'] = 5
-moyenne['CU03'] = 5
+moyennes['CU03'] = 5
+moyennes['CM05'] = 5
                 
 notes.update(saisie)
 corresp = dict(csv_to_list('correspondances.csv'))

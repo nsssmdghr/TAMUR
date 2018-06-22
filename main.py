@@ -78,17 +78,22 @@ note_point_i = get_note(point_i, 'points interet', tab_deciles)
 notes['CU03'] = note_point_i
 
 #Traitement ambiance urbaine
+amb_urb_brutes = dict(csv_to_list('ambiance_urbaine.csv'))
 amb_urb = ambiance_urbaine('ambiance_urbaine.csv', param)
 
-note_amb_urb = get_note(amb_urb, 'ambiance urbaine', tab_deciles)
+notes_amb_urb = get_note(amb_urb, 'ambiance urbaine', tab_deciles)
 notes['CU01'] = note_amb_urb
 
 #Ponderation et agregation
 saisie = dict(csv_to_list('saisie.csv'))
+moyennes = dict(csv_to_list('moyennes.csv'))
+moyennes['CU02'] = 5
+moyenne['CU03'] = 5
+                
 notes.update(saisie)
 corresp = dict(csv_to_list('correspondances.csv'))
 
-notes_branches = agreg(notes, param, corresp)
+notes_branches = agreg(notes, param, moyennes, corresp)
 
 #Exportation
-export(notes, notes_branches, ind_brut, nom_dossier)
+export(notes, notes_branches, ind_brut, amb_urb_brutes, nom_dossier)

@@ -86,6 +86,7 @@ notes['CU01'] = note_amb_urb
 
 #Ponderation et agregation
 saisie = dict(csv_to_list('saisie.csv'))
+moyennes = dict(csv_to_list('moyennes.csv')
 notes.update(saisie)
 corresp = dict(csv_to_list('correspondances.csv'))
 

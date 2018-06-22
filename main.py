@@ -90,7 +90,7 @@ moyennes = dict(csv_to_list('moyennes.csv')
 notes.update(saisie)
 corresp = dict(csv_to_list('correspondances.csv'))
 
-notes_branches = agreg(notes, param, corresp)
+notes_branches = agreg(notes, param, moyennes, corresp)
 
 #Exportation
 export(notes, notes_branches, ind_brut, amb_urb_brutes, nom_dossier)

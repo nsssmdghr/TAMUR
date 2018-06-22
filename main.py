@@ -12,6 +12,8 @@ from Scripts.deciles import *
 from Scripts.points_interet import *
 from Scripts.agregation import *
 from Scripts.export import *
+from Scripts.isochrones import *
+from Scripts.couverture_commerciale import *
 
 #Definition du chemin vers le dossier principal, a modifier manuellement
 chemin = 'Chemin vers dossier principal'
@@ -39,6 +41,9 @@ tab_deciles = csv_to_list('deciles,csv')
 #Initialisation des dictionnaires
 notes = {}
 ind_brut = {}
+
+#Préparation des isochrones
+isochrones('COMMUNES_OSM.shp')
 
 #Traitement potentiel commercial
 pot_com = potentiel_commercial('IRIS.shp', 'COMMUNES.csv', 'REV_IRIS.csv', 'POP_IRIS.csv', num_iris, param['n'])

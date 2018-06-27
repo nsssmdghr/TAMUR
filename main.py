@@ -11,7 +11,6 @@ from Scripts.deciles import *
 from Scripts.points_interet import *
 from Scripts.agregation import *
 from Scripts.export import *
-from Scripts.couverture_commerciale import *
 from qgis.core import *
 from qgis.utils import iface 
 from qgis.analysis import QgsGeometryAnalyzer 
@@ -157,7 +156,87 @@ note_pot_com = get_note(pot_com, 'potentiel commercial', tab_deciles)
 notes['CM05'] = note_pot_com 
 
 #Traitement couverture commerciale
-couv_com = couverture_commerciale('IRIS.shp', 'POP_IRIS_bis.csv', 'PAR_IRIS.csv', 'PAR_COM.csv', 'COM_IRIS.csv', 'COM_COM.csv', 'SAN_IRIS.csv', 'SAN_COM.csv', 'TRA_IRIS.csv', 'TRA_COM.csv', 'Isochrone10P.shp')
+
+#Traitement bdd
+sup_lignes('POP_IRIS_bis.csv',5)
+sup_lignes('PAR_IRIS.csv',5)
+sup_lignes('PAR_COM.csv',5)
+sup_lignes('COM_IRIS.csv',5)
+sup_lignes('COM_COM.csv',5)
+sup_lignes('SAN_IRIS.csv',5)
+sup_lignes('SAN_COM.csv',5)
+sup_lignes('TRA_IRIS.csv',5)
+sup_lignes('TRA_COM.csv', 5)
+keep_col('POP_IRIS.csv', [1,13])
+merge_col('PAR_IRIS.csv', [22,23,24,37,40,41,42,43])
+merge_col('PAR_COM.csv', [20,21,22,35,38,39,40,41])
+merge_col('COM_IRIS.csv', [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40])
+merge_col('COM_COM.csv', [5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38])
+merge_col('SAN_IRIS.csv', [20])
+merge_col('SAN_COM.csv', [18])
+merge_col('TRA_IRIS.csv', [11,14])
+merge_col('TRA_COM.csv', [9,12])
+
+#importation de la couche IRIS
+iris = iface.addVectorLayer("IRIS.shp","IRIS","ogr")
+popiris = iface.addVectorLayer("POP_IRIS_bis.csv","POP_IRIS","ogr")
+pariris = iface.addVectorLayer("PAR_IRIS.csv","PAR_IRIS","ogr")
+parcom = iface.addVectorLayer("PAR_COM.csv","PAR_COM","ogr")
+comiris = iface.addVectorLayer("COM_IRIS.csv","COM_IRIS","ogr")
+comcom = iface.addVectorLayer("COM_COM.csv","COM_COM","ogr")
+saniris = iface.addVectorLayer("SAN_IRIS.csv","SAN_IRIS","ogr")
+sancom = iface.addVectorLayer("SAN_COM.csv","SAN_COM","ogr")
+trairis = iface.addVectorLayer("TRA_IRIS.csv","TRA_IRIS","ogr")
+tracom = iface.addVectorLayer("TRA_COM.csv","TRA_COM","ogr")
+
+#Restriction au périmètre 10 min à pieds
+iso10p = iface.addVectorLayer("Isochrone10P.shp", "ISO10P", "ogr")
+iris.removeSelection()
+processing.runalg('qgis:extractbylocation', iris, iso10p, u'intersects', 0, "iris10p.shp")
+iris10p = iface.addVectorLayer("iris10p.shp", "IRIS10P", "ogr")
+
+#Jointures
+jointure(iris10p, popiris, dcomiris, field_1)
+jointure(iris10p, pariris, dcomiris, field_1)
+jointure(iris10p, parcom, depcom, field_1)
+jointure(iris10p, comiris, dcomiris, field_1)
+jointure(iris10p, comcom, depcom, field_1)
+jointure(iris10p, saniris, dcomiris, field_1)
+jointure(iris10p, sancom, depcom, field_1)
+jointure(iris10p, trairis, dcomiris, field_1)
+jointure(iris10p, tracom, depcom, field_1)
+
+#Ajout de champs
+iris10p.dataProvider().addAttributes([QgsField("NbCom", QVariant.Int), QgsField("Compteur", QVariant.Int)])
+iris10p.updateFields()
+
+#Remplissage des champs (somme de commerces et 1)
+features = iris10p.getFeatures()
+for feature in features:
+if not feature['POP_IRIS_Field_2] is None:
+if feature['PAR_IRIS_Field_2'] is None:
+iris10p.dataProvider().changeAttributeValues({ feature.id() : { 8 : (feature['PAR_COM_Field_2']+feature['COM_COM_Field_2']+feature['SAN_COM_Field_2']+feature['TRA_COM_Field_2'])/feature['POP_IRIS_Field_2'] } })
+else :
+iris10p.dataProvider().changeAttributeValues({ feature.id() : { 8 : (feature['PAR_IRIS_Field_2']+feature['COM_IRIS_Field_2']+feature['SAN_IRIS_Field_2']+feature['TRA_IRIS_Field_2'])/feature['POP_IRIS_Field_2'] } })
+iris10p.dataProvider().changeAttributeValues({ feature.id() : { 9 : 1 } })
+
+#Exportation du tableau final et calcul de la couverture commerciale moyenne sur la zone
+QgsVectorFileWriter.writeAsVectorFormat(iris10p, r'perim.csv', "utf-8", None, "CSV")
+couv_com = somme_col('iris10p.csv', 8)/somme_col('iris10p.csv', 9)
+
+#Nettoyage
+QgsMapLayerRegistry.instance().removeMapLayers( [iris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [popiris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [pariris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [parcom.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [comiris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [comcom.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [saniris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [sancom.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [trairis.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [tracom.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [iris10p.id()] )
+
 ind_brut['CC'] = couv_com
 
 note_couv_com = get_note(couv_com, 'couverture commerciale', tab_deciles)
@@ -166,7 +245,66 @@ notes['CM03'] = note_couv_com
 
 #Traitement accessibilite
 pm_vp, pm_tc = parts_modales('PARTS_MOD.csv')
-access_vp, access_tc = accessibilite('Couche_TC.shp', 'COMMUNES_OSM.shp', 'Emp_Com.csv', 'Isochrone10P.shp', 'Isochrone30V.shp')
+
+#Traitement de Emplois_communes, pour ne garder que l'information pertinente
+sup_lignes('Emp_Com.csv',5)
+keep_col('Emp_Com.csv',[1,39])
+print("Fichiers prets pour le traitement de l'accessibilité")
+
+#importation des couches et création des appels
+TC = iface.addVectorLayer("Couche_TC.shp", "TC", "ogr")
+iso10p = iface.addVectorLayer("Isochrone10P.shp", "isochrone10p", "ogr")
+
+#création et importation de la couche TC restreinte à l'isochrone
+TC.removeSelection()
+processing.runalg('qgis:extractbylocation', TC, iso10p, u'within', 0, "TC_isochrone10p.shp")
+TCiso10p = iface.addVectorLayer("TC_isochrone10p.shp","TCiso10p","ogr")
+
+#comptage des arrêts de bus dans l'isochrone
+it = TCiso10p.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"fclass" = bus_stop' )) 
+TCiso10p.setSelectedFeatures( [ f.id() for f in it ] )
+arrets_bus = TCiso10p.selectedFeatureCount()  
+
+#comptage des points autres qu'arrêts de bus
+it = TCiso10p.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"fclass" != bus_stop' )) 
+TCiso10p.setSelectedFeatures( [ f.id() for f in it ] )
+arrets_non_bus = TCiso10p.selectedFeatureCount()
+
+access_tc = arrets_bus + arrets_non_bus
+
+#ajout des couches commune, emplois et isochrone en voiture 30 min
+communes = iface.addVectorLayer("COMMUNE_OSM.shp","COMMUNES","ogr")
+empcom = iface.addVectorLayer("Emp_Com.csv","EMPCOM","ogr")
+iso30v = iface.addVectorLayer("Isochrones30V.shp","ISO30V","ogr")
+
+#jointure entre communes et empcom
+shpField='INSEE'
+csvField='field_1'
+joinObject = QgsVectorJoinInfo()
+joinObject.joinLayerId = empcom.id()
+joinObject.joinFieldName = csvField
+joinObject.targetFieldName = shpField
+joinObject.memoryCache = True
+communes.addJoin(joinObject)
+
+#selection des communes dans l'isochrone
+communes.removeSelection()
+processing.runalg('qgis:extractbylocation', communes, iso30v, u'within', 0, "Communes_iso30v.shp")
+comiso30v = iface.addVectorLayer("Communes_iso30v.shp","ComIso30v","ogr")
+
+#exportation du csv de sortie (indicateur = somme de la colonne S)
+QgsVectorFileWriter.writeAsVectorFormat(comiso30v, r'comiso30v.csv', "utf-8", None, "CSV")
+access_vp = somme_col('comiso30v.csv', 19)
+
+#nettoyer l'iface
+QgsMapLayerRegistry.instance().removeMapLayers( [TC.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [iso10p.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [TCiso10p.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [communes.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [empcom.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [iso30v.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [comiso30v.id()] )
+               
 ind_brut['AVP'] = access_vp
 ind_brut['ATC'] = access_tc
 

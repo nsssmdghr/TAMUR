@@ -5,7 +5,6 @@
 from Scripts.base import *
 from Scripts.importation import *
 from Scripts.parts_modales import *
-from Scripts.accessibilite import *
 from Scripts.ambiance_urbaine import *
 from Scripts.deciles import *
 from Scripts.points_interet import *

@@ -5,7 +5,6 @@
 from Scripts.base import *
 from Scripts.importation import *
 from Scripts.parts_modales import *
-from Scripts.potentiel_commercial import *
 from Scripts.accessibilite import *
 from Scripts.ambiance_urbaine import *
 from Scripts.deciles import *
@@ -13,11 +12,16 @@ from Scripts.points_interet import *
 from Scripts.agregation import *
 from Scripts.export import *
 from Scripts.couverture_commerciale import *
+from qgis.core import *
+from qgis.utils import iface 
+from qgis.analysis import QgsGeometryAnalyzer 
+from qgis.PyQt.QtCore import QVariant
+import processing
 
 #Definition du chemin vers le dossier principal, a modifier manuellement
 chemin = 'Chemin vers dossier principal'
 os.chdir(chemin)
-os.chdir('./Couches')
+os.chdir('.\Couches')
 
 
 #Traitement de base
@@ -41,38 +45,112 @@ tab_deciles = csv_to_list('deciles,csv')
 notes = {}
 ind_brut = {}
 
-#Préparation des isochrones
-geo = iface.addVectorLayer('COMMUNES_OSM.shp',"GEO","ogr")
-  
-flag = 0
-  while flag != 1:
-    flag = raw_input("Veuillez suivre le mode d'emploi pour créer une isochrone de 10 min à pieds, puis taper 1 et valider avec Entree.")
-
-iso10p = iface.activeLayer()
-QgsVectorFileWriter.writeAsVectorFormat(iso10p, "Isochrone10P.shp", "utf-8", iso10p.crs(), "ESRI Shapefile")
-QgsMapLayerRegistry.instance().removeMapLayers( [iso10p.id()] )
-
-flag = 0
-  while flag != 1:
-    flag = raw_input("Veuillez suivre le mode d'emploi pour créer une isochrone de 10 min en voiture, puis taper 1 et valider avec Entree.")
-
-iso10v = iface.activeLayer()
-QgsVectorFileWriter.writeAsVectorFormat(iso10p, "Isochrone10V.shp", "utf-8", iso10v.crs(), "ESRI Shapefile")
-QgsMapLayerRegistry.instance().removeMapLayers( [iso10v.id()] )
-
-flag = 0
-  while flag != 1:
-    flag = raw_input("Veuillez suivre le mode d'emploi pour créer une isochrone de 30 min en voiture, puis taper 1 et valider avec Entree.")
-
-iso30v = iface.activeLayer()
-QgsVectorFileWriter.writeAsVectorFormat(iso30v, "Isochrone30V.shp", "utf-8", iso30v.crs(), "ESRI Shapefile")
-QgsMapLayerRegistry.instance().removeMapLayers( [iso30v.id()] )
-
-print("Les isochrones ont bien été créées")
-
-
 #Traitement potentiel commercial
-pot_com = potentiel_commercial('IRIS.shp', 'COMMUNES.csv', 'REV_IRIS.csv', 'POP_IRIS.csv', num_iris, param['n'])
+
+sup_lignes(Donnees_Communes,5)
+sup_lignes(Population_IRIS,5)
+sup_lignes(Revenus_IRIS,5)
+keep_col( Population_IRIS,[1,13,30])
+keep_col(Revenus_IRIS,[1,7])
+keep_col(Donnees_Communes,[1,5,7])
+sup_lignes_null(Population_IRIS)
+sup_lignes_null(Donnees_Communes)
+sup_lignes_null(Revenus_IRIS)
+print("Fichiers prets pour le traitement du pouvoir d'achat")
+
+
+#Importation des couche et creation des appels
+iris = iface.addVectorLayer("IRIS.shp","IRIS","ogr")
+communes = iface.addVectorLayer("COMMUNES.csv","COMMUNES","ogr")
+reviris = iface.addVectorLayer("REV_IRIS.csv","REV_IRIS","ogr")
+popiris = iface.addVectorLayer("POP_IRIS.csv","POP_IRIS","ogr")
+
+#Selection de l'IRIS a etudier
+num = num_iris
+it = iris.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"DCOMIRIS" = ' + num) ))
+iris.setSelectedFeatures( [ f.id() for f in it ] )
+
+#Creation du perimètre de 10km
+QgsGeometryAnalyzer().buffer(iris, "Buffer.shp",10000, True, False, -1)
+buffer = iface.addVectorLayer("Buffer.shp","Buffer","ogr")
+
+#Creation d'une couche restreinte au perimètre de 10km
+iris.removeSelection()
+
+processing.runalg('qgis:extractbylocation', iris, buffer, u'within', 0, "Perim.shp")
+perim = iface.addVectorLayer("Perim.shp","Perim","ogr")
+
+#Jointures des differentes bases de donnees à la couche geographique
+perimField='depcom'
+communesField='field_1'
+joinObject = QgsVectorJoinInfo()
+joinObject.joinLayerId = communes.id()
+joinObject.joinFieldName = communesField
+joinObject.targetFieldName = perimField
+joinObject.memoryCache = True
+perim.addJoin(joinObject)
+
+perimField='dcomiris'
+popirisField='field_1'
+joinObject = QgsVectorJoinInfo()
+joinObject.joinLayerId = popiris.id()
+joinObject.joinFieldName = popirisField
+joinObject.targetFieldName = perimField
+joinObject.memoryCache = True
+perim.addJoin(joinObject)
+
+perimField='dcomiris'
+revirisField='field_1'
+joinObject = QgsVectorJoinInfo()
+joinObject.joinLayerId = reviris.id()
+joinObject.joinFieldName = revirisField
+joinObject.targetFieldName = perimField
+joinObject.memoryCache = True
+perim.addJoin(joinObject)
+
+#Creation de nouvelles colonnes (pouvoir d'achat, distance et potentiel de chaque IRIS)
+perim.dataProvider().addAttributes([QgsField("P_Achat", QVariant.Int), QgsField("Distance", QVariant.Int),QgsField("Potentiel", QVariant.Int)])
+perim.updateFields()
+
+#Remplissage des nouvelles colonnes
+#Creation d'un appel pour le centroïde de l'IRIS etudie
+it = iris.getFeatures(QgsFeatureRequest().setFilterExpression ( u'"DCOMIRIS" = {0}'.format(num) ))
+for feature in it:
+  centro = feature.geometry().centroid()
+
+n=param['n']
+
+#Remplissage des colonnes pouvoir d'achat (numero 8) et distance (numero 9)
+distance = QgsDistanceArea()
+
+features = perim.getFeatures()
+for feature in features:
+  if not feature['COMMUNES_Field_2'] is None:
+    if feature['REV_IRIS_Field_2'] is None:
+      perim.dataProvider().changeAttributeValues({ feature.id() : { 8 : feature['COMMUNES_Field_3']*(feature['POP_IRIS_Field_2']-0.4*feature['POP_IRIS_Field_3']) } })
+    else: 
+      perim.dataProvider().changeAttributeValues({ feature.id() : { 8 : feature['REV_IRIS_Field_2']*(feature['POP_IRIS_Field_2']-0.4*feature['POP_IRIS_Field_3']) } })		
+
+  centest = feature.geometry().centroid()
+  perim.dataProvider().changeAttributeValues({ feature.id() : { 9 : distance.measureLine(centro.asPoint(), centest.asPoint()) } })
+
+#Remplissage de la colonne potentiel (numero 10)
+features = perim.getFeatures()
+for feature in features:
+  if not feature['COMMUNES_Field_2'] is None:
+    perim.dataProvider().changeAttributeValues({ feature.id() : { 10 : feature['P_Achat']/(feature['Distance']+200)^n } })
+
+#Exportation des donnees des IRIS du perimètre dans un CSV, calcule et renvoi du resultat final (somme de la colonne K)
+QgsVectorFileWriter.writeAsVectorFormat(perim, r'perim.csv', "utf-8", None, "CSV")
+pot_com = somme_col('perim.csv', 11)
+
+QgsMapLayerRegistry.instance().removeMapLayers( [iris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [communes.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [reviris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [popiris.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [buffer.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [perim.id()] )
+
 ind_brut['PC'] = pot_com
 
 note_pot_com = get_note(pot_com, 'potentiel commercial', tab_deciles)

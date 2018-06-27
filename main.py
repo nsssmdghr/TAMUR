@@ -7,7 +7,6 @@ from Scripts.importation import *
 from Scripts.parts_modales import *
 from Scripts.ambiance_urbaine import *
 from Scripts.deciles import *
-from Scripts.points_interet import *
 from Scripts.agregation import *
 from Scripts.export import *
 from qgis.core import *
@@ -317,7 +316,31 @@ notes['CU02'] = note_access
 
 
 #Traitement points d'interet
-point_i = points_interet('POI_EPSC.shp', 'Isochrone10V.shp', param)
+poi = iface.addVectorLayer("POI_EPSG.shp", "POI", "ogr")
+iso10v = iface.addVectorLayer("Isochrone10V.shp", "isochrone10v", "ogr")
+
+poi.removeSelection()
+processing.runalg('qgis:extractbylocation', poi, iso10v, u'within', 0, ".\POIiso.shp")
+POIiso = iface.addVectorLayer(".\POIiso.shp", "POIiso", "ogr")
+
+nombre_POI = POIiso.featureCount()
+
+flag = 0
+while flag not in [1,2,3]:
+  flag = raw_input('Veuillez entrer le numero correspondant a la repartition des points d\'interet, puis valider avec Entree : \n1:uniforme autour du quartier \n2:homogène autour du quartier \n3:concentrée d\'un seul côté du quartier \n')
+rep = flag
+
+flag = 0
+while flag not in [1,2,3]:
+  flag = raw_input('Veuillez entrer le numero correspondant a la proximite des points d\'interet, puis valider avec Entree : \n1:la plupart des points sont proches du quartier \n2: points à distances moyennes ou hétérogènes du quartier \n3:points éloignés du quartier \n')
+pro = flag
+
+QgsMapLayerRegistry.instance().removeMapLayers( [poi.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [iso10v.id()] )
+QgsMapLayerRegistry.instance().removeMapLayers( [POIiso.id()] )
+
+point_i = nombre_POI*rep*pro
+               
 ind_brut['PI'] = point_i
 
 note_point_i = get_note(point_i, 'points interet', tab_deciles)

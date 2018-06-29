@@ -324,15 +324,21 @@ processing.runalg('qgis:extractbylocation', poi, iso10v, u'within', 0, ".\POIiso
 POIiso = iface.addVectorLayer(".\POIiso.shp", "POIiso", "ogr")
 
 nombre_POI = POIiso.featureCount()
-
+    
+               
 flag = 0
+tmp = ''
 while flag not in [1,2,3]:
-  flag = raw_input('Veuillez entrer le numero correspondant a la repartition des points d\'interet, puis valider avec Entree : \n1:uniforme autour du quartier \n2:homogène autour du quartier \n3:concentrée d\'un seul côté du quartier \n')
-rep = flag
-
+  tmp = QInputDialog.getText(None, 'A vous de jouer !', ''Veuillez entrer le numero correspondant a la repartition des points d\'interet, puis valider avec Entree : \n1:uniforme autour du quartier \n2:homogène autour du quartier \n3:concentrée d\'un seul côté du quartier \n')
+	flag = str(tmp[0])
+rep = flag               
+                              
+               
 flag = 0
+tmp = ''
 while flag not in [1,2,3]:
-  flag = raw_input('Veuillez entrer le numero correspondant a la proximite des points d\'interet, puis valider avec Entree : \n1:la plupart des points sont proches du quartier \n2: points à distances moyennes ou hétérogènes du quartier \n3:points éloignés du quartier \n')
+  tmp = QInputDialog.getText(None, 'A vous de jouer !', 'Veuillez entrer le numero correspondant a la proximite des points d\'interet, puis valider avec Entree : \n1:la plupart des points sont proches du quartier \n2: points à distances moyennes ou hétérogènes du quartier \n3:points éloignés du quartier \n')
+	flag = str(tmp[0])
 pro = flag
 
 QgsMapLayerRegistry.instance().removeMapLayers( [poi.id()] )

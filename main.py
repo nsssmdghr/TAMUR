@@ -211,12 +211,12 @@ iris10p.updateFields()
 #Remplissage des champs (somme de commerces et 1)
 features = iris10p.getFeatures()
 for feature in features:
-if not feature['POP_IRIS_Field_2] is None:
-if feature['PAR_IRIS_Field_2'] is None:
-iris10p.dataProvider().changeAttributeValues({ feature.id() : { 8 : (feature['PAR_COM_Field_2']+feature['COM_COM_Field_2']+feature['SAN_COM_Field_2']+feature['TRA_COM_Field_2'])/feature['POP_IRIS_Field_2'] } })
-else :
-iris10p.dataProvider().changeAttributeValues({ feature.id() : { 8 : (feature['PAR_IRIS_Field_2']+feature['COM_IRIS_Field_2']+feature['SAN_IRIS_Field_2']+feature['TRA_IRIS_Field_2'])/feature['POP_IRIS_Field_2'] } })
-iris10p.dataProvider().changeAttributeValues({ feature.id() : { 9 : 1 } })
+	if not feature['POP_IRIS_Field_2] is None:
+		if feature['PAR_IRIS_Field_2'] is None:
+			iris10p.dataProvider().changeAttributeValues({ feature.id() : { 8 : (feature['PAR_COM_Field_2']+feature['COM_COM_Field_2']+feature['SAN_COM_Field_2']+feature['TRA_COM_Field_2'])/feature['POP_IRIS_Field_2'] } })
+		else :
+			iris10p.dataProvider().changeAttributeValues({ feature.id() : { 8 : (feature['PAR_IRIS_Field_2']+feature['COM_IRIS_Field_2']+feature['SAN_IRIS_Field_2']+feature['TRA_IRIS_Field_2'])/feature['POP_IRIS_Field_2'] } })
+		iris10p.dataProvider().changeAttributeValues({ feature.id() : { 9 : 1 } })
 
 #Exportation du tableau final et calcul de la couverture commerciale moyenne sur la zone
 QgsVectorFileWriter.writeAsVectorFormat(iris10p, r'perim.csv', "utf-8", None, "CSV")
